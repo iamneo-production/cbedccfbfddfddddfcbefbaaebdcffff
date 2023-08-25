@@ -1,50 +1,35 @@
-package ai.iamneo.testing.Testing_Selenium_TestNg;
-
-import org.testng.annotations.Test;
-import java.net.URL;
-import java.util.List;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testng.annotations.BeforeTest;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 public class AppTest {
+  private WebDriver driver;
+  private App app;
 
-	ChromeOptions chromeOptions = new ChromeOptions();
-	WebDriver driver = null;
+  @BeforeTest
+  public void setUp() {
+    System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+    driver = new ChromeDriver();
+    app = new App(driver);
+  }
 
+  @Test
+  public void testCountLinks() {
+    app.navigateTo("https://flipkart.com");
+    int count = app.countLinks();
+    System.out.println("Number of links: " + count);
+  }
 
-	@BeforeTest
-	public void beforeTest() throws Exception {
-		
-		driver = new RemoteWebDriver(new URL("http://localhost:4444"), chromeOptions);
-        driver.get("https://flipkart.com/");
+  @Test
+  public void testPrintLinks() {
+    app.navigateTo("https://flipkart.com");
+    app.printLinks();
+  }
 
-	}
-
-	@Test
-	public void testcase_1() throws InterruptedException //Go to Ebay
-	{
-		List<WebElement> allLinks = driver.findElements(By.tagName("a"));
-	    int count= allLinks.size();
-
-	}
-
-	@Test
-	public void testcase_2() throws InterruptedException 
-      {
-		List<WebElement> allLinks = driver.findElements(By.tagName("a"));
-		for (WebElement link : allLinks) 
-		{
-			System.out.println("Link Text: " + link.getText() + " Link URL: " + link.getAttribute("href"));
-		}
-		
-	}	     	
-	@AfterTest
-	public void afterTest() {
-		driver.quit();
-	}
+  @AfterTest
+  public void tearDown() {
+    driver.quit();
+  }
 }
